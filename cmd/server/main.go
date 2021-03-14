@@ -48,6 +48,7 @@ func AggregateHandler(w http.ResponseWriter, r *http.Request) {
 	aggregateOutput, err := aggregate.ProcessAggregateResponse(tags, sector, *aggregateData)
 	if err != nil {
 		w.Write([]byte(fmt.Sprintf("Error while parsing aggregate data. err=%v", err)))
+		return
 	}
 	resp, err := json.Marshal(aggregateOutput)
 	if err != nil {

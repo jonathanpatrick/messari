@@ -30,7 +30,6 @@ func ProcessAggregateResponse(tags string, sector string, aggregateData Aggregat
 			// skip asset missing sector
 			continue
 		}
-
 		resp.Count++
 		resp.Volume += item.Metrics.MarketData.Volume
 		resp.Marketcap += item.Metrics.Marketcap.Marketcap
