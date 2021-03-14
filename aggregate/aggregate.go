@@ -86,6 +86,7 @@ type AggregateDataItem struct {
 	} `json:"metrics,omitempty"`
 }
 
+// helper for checking values in sector/tags slice
 func contains(slice []string, val string) bool {
 	for _, item := range slice {
 		if strings.ToLower(item) == strings.ToLower(val) {
@@ -102,7 +103,6 @@ func adjustValueForYesterday(val float64, percentChange float64) float64 {
 		isPositive = true
 	}
 
-	// fmt.Println(fmt.Sprintf("formatted"))
 	// divide if change from yesterday was positive
 	if isPositive {
 		formattedPercentage := 1 + abs(percentChange)/100

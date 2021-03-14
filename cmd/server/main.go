@@ -25,11 +25,13 @@ func AssetHandler(w http.ResponseWriter, r *http.Request) {
 	err := api.GetAsset(vars["asset"], assetData)
 	if err != nil {
 		w.Write([]byte(fmt.Sprintf("Error while retrieving data. err=%v", err)))
+		return
 	}
 
 	resp, err := json.Marshal(asset.MapAssetResponse(*assetData))
 	if err != nil {
 		w.Write([]byte(fmt.Sprintf("Error while marshaling json. err=%v", err)))
+		return
 	}
 
 	w.Write([]byte(resp))
