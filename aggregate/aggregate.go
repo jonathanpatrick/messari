@@ -102,12 +102,14 @@ func adjustValueForYesterday(val float64, percentChange float64) float64 {
 		isPositive = true
 	}
 
-	formattedPercentage := 1 + abs(percentChange)/100
+	// fmt.Println(fmt.Sprintf("formatted"))
 	// divide if change from yesterday was positive
 	if isPositive {
+		formattedPercentage := 1 + abs(percentChange)/100
 		return val / formattedPercentage
 	} else {
-		return val * formattedPercentage
+		formattedPercentage := 1 - abs(percentChange)/100
+		return val / formattedPercentage
 	}
 }
 
