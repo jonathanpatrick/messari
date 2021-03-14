@@ -14,12 +14,12 @@ func AssetHandler(w http.ResponseWriter, r *http.Request) {
 	assetData := &AssetData{}
 	err := api.GetAsset(vars["asset"], assetData)
 	if err != nil {
-		fmt.Println(err)
+		w.Write([]byte(fmt.Sprintf("Error while retrieving data. err=%v", err)))
 	}
 
 	resp, err := json.Marshal(mapAssetResponse(*assetData))
 	if err != nil {
-		fmt.Println(err)
+		w.Write([]byte(fmt.Sprintf("Error while marshaling json. err=%v", err)))
 	}
 
 	w.Write([]byte(resp))
@@ -34,7 +34,6 @@ type AssetResponse struct {
 	Volume               float64 `json:"volume"`
 	TwentyFourHourChange float64 `json:"24hr change"`
 	Marketcap            float64 `json:"marketcap"`
-	EthChange            float64 `json:"percent_change_eth_last_24_hours"`
 }
 
 func mapAssetResponse(data AssetData) AssetResponse {
@@ -46,30 +45,22 @@ func mapAssetResponse(data AssetData) AssetResponse {
 		Volume:               data.Asset.MarketData.Volume,
 		TwentyFourHourChange: data.Asset.MarketData.TwentyFourHourChange,
 		Marketcap:            data.Asset.Marketcap.Marketcap,
-		EthChange:            data.Asset.MarketData.EthChange,
 	}
 }
 
 // Structs for capturing messari response
 type AssetData struct {
-	Asset Asset `json:"data"`
-}
-
-type Asset struct {
-	Symbol     string          `json:"symbol"`
-	Name       string          `json:"name"`
-	Slug       string          `json:"slug"`
-	MarketData AssetMarketData `json:"market_data"`
-	Marketcap  AssetMarketcap  `json:"marketcap"`
-}
-
-type AssetMarketData struct {
-	Price                float64 `json:"price_usd"`
-	Volume               float64 `json:"volume_last_24_hours"`
-	TwentyFourHourChange float64 `json:"percent_change_usd_last_24_hours"`
-	EthChange            float64 `json:"percent_change_eth_last_24_hours"`
-}
-
-type AssetMarketcap struct {
-	Marketcap float64 `json:"current_marketcap_usd"`
+	Asset struct {
+		Symbol     string `json:"symbol,omitempty"`
+		Name       string `json:"name,omitempty"`
+		Slug       string `json:"slug,omitempty"`
+		MarketData struct {
+			Price                float64 `json:"price_usd,omitempty"`
+			Volume               float64 `json:"volume_last_24_hours,omitempty"`
+			TwentyFourHourChange float64 `json:"percent_change_usd_last_24_hours,omitempty"`
+		} `json:"market_data"`
+		Marketcap struct {
+			Marketcap float64 `json:"current_marketcap_usd,omitempty"`
+		} `json:"marketcap"`
+	} `json:"data"`
 }
